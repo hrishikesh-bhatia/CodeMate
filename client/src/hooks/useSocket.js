@@ -1,20 +1,20 @@
-import { useEffect, useRef } from "react";
+// ✅ useSocket.js (clean version)
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
 export default function useSocket(roomId) {
-  const socketRef = useRef(null);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:5000"); // or your deployed server URL
+    const newSocket = io("http://localhost:5000");
+    setSocket(newSocket);
 
-    // socketRef.current.emit("join-room", roomId);
-    socketRef.current.emit("join-room", roomId);
-
+    newSocket.emit("join-room", roomId);
 
     return () => {
-      socketRef.current.disconnect();
+      newSocket.disconnect();
     };
   }, [roomId]);
 
-  return socketRef;
+  return socket;
 }

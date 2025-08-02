@@ -38,6 +38,18 @@ io.on("connection", (socket) => {
     console.log(`User ${socket.id} joined room ${roomId}`);
   });
 
+  socket.on("join-voice", (peerId, roomId) => {
+  socket.peerId = peerId;
+  socket.roomId = roomId;
+  socket.join(roomId); // ✅ Join the voice room
+  console.log(`🎙 Peer ${peerId} joined voice room ${roomId}`);
+  socket.to(roomId).emit("user-joined-voice", peerId);
+});
+
+
+
+
+
   socket.on("code-change", ({ roomId, code }) => {
     socket.to(roomId).emit("code-update", code);
   });
@@ -45,7 +57,9 @@ io.on("connection", (socket) => {
   registerCodeExecutionSocket(io, socket);
 
   socket.on("disconnect", () => {
-    console.log(`Socket disconnected: ${socket.id}`);
+   if (socket.roomId && socket.peerId) {
+    socket.to(socket.roomId).emit("user-left-voice", socket.peerId);
+  }
   });
 });
 

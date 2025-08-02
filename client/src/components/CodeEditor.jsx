@@ -1,179 +1,185 @@
 import { useRef, useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
-import axios from "axios";
 import OutputBox from "./OutputBox";
-
-
-
 
 function CodeEditor({ socketRef, roomId }) {
   const editorRef = useRef(null);
-  const [time, setTime] = useState(null);
-  const [memory, setMemory] = useState(null);
+  const monacoRef = useRef(null);
 
   const [code, setCode] = useState("// Start coding...");
   const [stdin, setStdin] = useState("");
+  const [languageId, setLanguageId] = useState(63); // 63 = JavaScript
+  const [output, setOutput] = useState("");
+  const [time, setTime] = useState(null);
+  const [memory, setMemory] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleEditorDidMount = (editor) => {
+  const decorationsRef = useRef({});
+
+  // 🖊️ Editor mount handler
+  const handleEditorDidMount = (editor, monaco) => {
     editorRef.current = editor;
+    monacoRef.current = monaco;
 
-    // Listen for code changes from server
-    socketRef.current.on("code-update", (incomingCode) => {
-      if (incomingCode !== editorRef.current.getValue()) {
-        editorRef.current.setValue(incomingCode);
-      }
+    // Emit cursor position
+    editor.onDidChangeCursorPosition((e) => {
+      const position = e.position;
+      socketRef?.emit("cursor-change", {
+        roomId,
+        position,
+        userId: socketRef.id,
+      });
     });
   };
 
+  // 📝 Code change handler
   const handleChange = (newCode) => {
     setCode(newCode);
-    socketRef.current.emit("code-change", { roomId, code: newCode });
+    socketRef?.emit("code-change", { roomId, code: newCode });
   };
 
+  // ▶️ Run code handler
+  const handleRunCode = () => {
+    setLoading(true);
+    socketRef?.emit("run-code", {
+      code,
+      languageId,
+      stdin,
+      roomId,
+    });
+  };
 
-  const [output, setOutput] = useState("");
-const [languageId, setLanguageId] = useState(63); // 63 = JavaScript
-const [loading, setLoading] = useState(false);
+  // 🔌 Socket listeners
+  useEffect(() => {
+    if (!socketRef) return;
 
-// const handleRunCode = async () => {
-//   setLoading(true);
-//   try {
-//     socketRef.current.emit("run-code", {
-//      code,
-//     languageId,
-//     roomId
-//   });
+    const handleCodeUpdate = (incomingCode) => {
+      if (incomingCode !== editorRef.current?.getValue()) {
+        editorRef.current?.setValue(incomingCode);
+      }
+    };
 
-//     // const { stdout, stderr, status } = response.data;
-//     // const display = stdout || stderr || status.description || "No output";
-//     // setOutput(display);
-//   } catch (err) {
-//     setOutput("Execution failed.");
-//   }
-//   setLoading(false);
-// };
+    // const handleOutput = ({ output, time, memory }) => {
+    //   setOutput(output);
+    //   setTime(time);
+    //   setMemory(memory);
+    //   setLoading(false);
+    // };
 
-const handleRunCode = () => {
-  console.log("🚀 Emitting 'run-code' with:", { code, languageId, roomId });
-  setLoading(true);
-  socketRef.current.emit("run-code", {
-    code,
-    languageId,
-    stdin,
-    roomId
-  });
+    const handleOutput = ({ output, time, memory, error, status }) => {
+  console.log("📥 Received 'code-output':", { output, error, status });
+
+  if (status === "error" && error) {
+    setOutput(`❌ Error:\n${error}`);
+  } else {
+    setOutput(output);
+  }
+
+  setTime(time);
+  setMemory(memory);
+  setLoading(false);
 };
 
 
-//   useEffect(() => {
-//   if (!socketRef.current) return;
+    const handleCursorChange = ({ position, userId }) => {
+      if (userId === socketRef.id || !editorRef.current || !monacoRef.current) return;
 
-//   socketRef.current.on("code-output", ({ output }) => {
-//     console.log("📥 Received 'code-output':", output);
-//     setOutput(output);
-//     setLoading(false);
-//   });
+      const editor = editorRef.current;
+      const monaco = monacoRef.current;
 
-//   return () => {
-//     socketRef.current.off("code-output");
-//   };
-// }, []);
+      // Remove old decoration
+      if (decorationsRef.current[userId]) {
+        editor.deltaDecorations(decorationsRef.current[userId], []);
+      }
 
+      // Add new decoration
+      decorationsRef.current[userId] = editor.deltaDecorations([], [
+        {
+          range: new monaco.Range(
+            position.lineNumber,
+            position.column,
+            position.lineNumber,
+            position.column
+          ),
+          options: {
+            className: "remote-cursor",
+            stickiness: monaco.editor.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges,
+          },
+        },
+      ]);
+    };
 
-//   useEffect(() => {
-  
-//   const socket = socketRef.current;
-//   if (!socket)  {
-//     console.log("YOYOYO");
-//     return;
-//   }
+    socketRef.on("code-update", handleCodeUpdate);
+    socketRef.on("code-output", handleOutput);
+    socketRef.on("cursor-change", handleCursorChange);
 
-//   const handleOutput = ({ output }) => {
-//     console.log("📥 Received 'code-output':", output);
-//     setOutput(output);
-//     setLoading(false);
-//   };
+    return () => {
+      socketRef.off("code-update", handleCodeUpdate);
+      socketRef.off("code-output", handleOutput);
+      socketRef.off("cursor-change", handleCursorChange);
+    };
+  }, [socketRef]);
 
-//   socket.on("code-output", handleOutput);
-
-//   return () => {
-//     socket.off("code-output", handleOutput); // ✅ precise cleanup
-//   };
-// }, []);
-
-
-  useEffect(() => {
-  const interval = setInterval(() => {
-    const socket = socketRef.current;
-    if (socket) {
-      socket.on("code-output", handleOutput);
-      clearInterval(interval);
+  // 🧠 Language mapping
+  const getMonacoLanguage = (id) => {
+    switch (id) {
+      case 63: return "javascript";
+      case 71: return "python";
+      case 54: return "cpp";
+      case 62: return "java";
+      default: return "plaintext";
     }
-  }, 100);
-
-  const handleOutput = ({ output }) => {
-    console.log("📥 Received 'code-output':", output);
-    setOutput(output);
-    setTime(time);
-    setMemory(memory);
-    setLoading(false);
   };
-
-  return () => {
-    const socket = socketRef.current;
-    if (socket) socket.off("code-output", handleOutput);
-    clearInterval(interval);
-  };
-}, []);
-
 
   return (
     <>
-    <div className="flex items-center gap-4 mb-2">
-  <select
-    className="p-2 rounded bg-gray-800 text-white"
-    value={languageId}
-    onChange={(e) => setLanguageId(parseInt(e.target.value))}
-  >
-    <option value="63">JavaScript</option>
-    <option value="71">Python</option>
-    <option value="54">C++</option>
-    <option value="62">Java</option>
-  </select>
+      {/* 🧠 Controls */}
+      <div className="flex flex-col gap-4 mb-4">
+        <div className="flex items-center gap-4">
+          <select
+            className="p-2 rounded bg-gray-800 text-white"
+            value={languageId}
+            onChange={(e) => setLanguageId(parseInt(e.target.value))}
+          >
+            <option value="63">JavaScript</option>
+            <option value="71">Python</option>
+            <option value="54">C++</option>
+            <option value="62">Java</option>
+          </select>
 
-   <textarea
-  className="w-full p-2 mt-2 rounded bg-gray-900 text-white border border-gray-700 h-24"
-  placeholder="Enter custom input (stdin)..."
-  value={stdin}
-  onChange={(e) => setStdin(e.target.value)}
-></textarea>
+          <button
+            onClick={handleRunCode}
+            className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700"
+            disabled={loading}
+          >
+            {loading ? "Running..." : "Run Code"}
+          </button>
+        </div>
 
+        <textarea
+          className="w-full p-2 rounded bg-gray-900 text-white border border-gray-700 h-24"
+          placeholder="Enter custom input (stdin)..."
+          value={stdin}
+          onChange={(e) => setStdin(e.target.value)}
+        ></textarea>
+      </div>
 
+      {/* 🧑‍💻 Monaco Editor */}
+      <Editor
+        height="90vh"
+        language={getMonacoLanguage(languageId)}
+        value={code}
+        onMount={handleEditorDidMount}
+        onChange={handleChange}
+        theme="vs-dark"
+      />
 
-  <button
-    onClick={handleRunCode}
-    className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700"
-    disabled={loading}
-  >
-    {loading ? "Running..." : "Run Code"}
-  </button>
-</div>
+      {/* 📤 Output */}
+      <OutputBox output={output} time={time} memory={memory} />
 
-
-    <Editor
-      height="90vh"
-      defaultLanguage="javascript"
-      defaultValue={code}
-      onMount={handleEditorDidMount}
-      onChange={handleChange}
-      theme="vs-dark"
-    />
-     
-    <OutputBox output={output} time={time} memory={memory} />
-
+      
 
     </>
-    
   );
 }
 

@@ -1,5 +1,6 @@
 const axios = require("axios");
-require("dotenv").config({ path: "../.env" }); 
+require("dotenv").config({ path: "../.env" });
+
 const JUDGE0_URL = "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true";
 
 const runCode = async (req, res) => {
@@ -19,23 +20,32 @@ const runCode = async (req, res) => {
           "X-RapidAPI-Key": process.env.JUDGE0_API_KEY,
           "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
         }
-        //process.env.JUDGE0_API_KEY,
       }
     );
 
-    const { stdout, stderr, status } = response.data;
+    const { stdout, stderr, compile_output, status, time, memory } = response.data;
+
+    // 🧠 Determine output and error
+    const hasError = status?.description !== "Accepted";
+    const errorMessage = compile_output || stderr || null;
 
     res.json({
-      stdout,
-      stderr,
-      status,
+      output: stdout || "",
+      error: hasError ? errorMessage : null,
+      status: hasError ? "error" : "success",
+      time,
+      memory
     });
   } catch (err) {
     console.error("Judge0 Error:", err.response?.data || err.message);
-  res.status(500).json({ error: err.response?.data || "Code execution failed." });
-    // console.error("Judge0 Error:", err.message);
-    // res.status(500).json({ error: "Code execution failed." });
+    res.status(500).json({
+      output: "",
+      error: err.response?.data?.message || "Code execution failed.",
+      status: "error",
+      time: null,
+      memory: null
+    });
   }
 };
 
-module.exports = runCode
+module.exports = runCode;
