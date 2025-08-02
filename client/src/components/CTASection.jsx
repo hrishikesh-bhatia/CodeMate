@@ -23,7 +23,7 @@ const CTASection = () => {
             <h2 className="text-4xl lg:text-6xl font-bold leading-tight">
               Ready to Start
               <br />
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
+              <span className="bg-gradient-primary bg-clip-text">
                 Coding Together?
               </span>
             </h2>

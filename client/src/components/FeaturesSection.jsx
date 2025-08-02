@@ -56,7 +56,7 @@ const FeaturesSection = () => {
           <h2 className="text-4xl lg:text-6xl font-bold mb-6">
             Everything You Need to
             <br />
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
+            <span className="bg-gradient-primary bg-clip-text">
               Code Together
             </span>
           </h2>
@@ -93,7 +93,7 @@ const FeaturesSection = () => {
             { number: "24/7", label: "Session Persistence" }
           ].map((stat, index) => (
             <div key={index} className="text-center">
-              <div className="text-3xl lg:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
+              <div className="text-3xl lg:text-4xl font-bold bg-gradient-primary bg-clip-text mb-2">
                 {stat.number}
               </div>
               <div className="text-muted-foreground">

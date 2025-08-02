@@ -3,16 +3,29 @@ import Home from "./pages/Home";
 import Room from "./pages/Room";
 import AuthPage from "./pages/Auth";
 import Index from "./pages/Index";
-
+import ProtectedRoute from "./contexts/ProtectedRoute";
 
 function App() {
   return (
-    // <h1 className="bg-purple-700">Checking if it is there</h1>
     <Routes>
       <Route path="/Auth" element={<AuthPage />} />
-      <Route path="/" element={<Home />} />
-      <Route path="/Landing" element={<Index />} />
-      <Route path="/room/:roomId" element={<Room />} />
+      <Route path="/" element={<Index />} />
+      <Route
+        path="/Home"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/room/:roomId"
+        element={
+          <ProtectedRoute>
+            <Room />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

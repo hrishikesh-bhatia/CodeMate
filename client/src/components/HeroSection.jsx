@@ -19,7 +19,7 @@ const HeroSection = () => {
               <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
                 Code Together,
                 <br />
-                <span className="bg-gradient-primary bg-clip-text text-transparent">
+                <span className="bg-gradient-primary bg-clip-text">
                   Learn Better
                 </span>
               </h1>
@@ -52,11 +52,11 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button variant="hero" size="xl" className="group">
+              <Button variant="hero" size="xl" className="group cursor-pointer">
                 Get Started
                 <Code className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               </Button>
-              <Button variant="outline" size="xl">
+              <Button variant="outline" size="xl" className="cursor-pointer">
                 Sign In
               </Button>
             </div>

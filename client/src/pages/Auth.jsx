@@ -15,7 +15,7 @@ function AuthPage() {
     try {
       const res = await axios.post(url, form);
       login(res.data.token, res.data.role);
-      navigate("/");
+      navigate("/Home");
     } catch (err) {
       alert("Auth failed");
     }
