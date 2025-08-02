@@ -7,7 +7,9 @@ export default function useSocket(roomId) {
   useEffect(() => {
     socketRef.current = io("http://localhost:5000"); // or your deployed server URL
 
+    // socketRef.current.emit("join-room", roomId);
     socketRef.current.emit("join-room", roomId);
+
 
     return () => {
       socketRef.current.disconnect();

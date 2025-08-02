@@ -4,7 +4,7 @@ import Room from "./pages/Room";
 import AuthPage from "./pages/Auth";
 import Index from "./pages/Index";
 import ProtectedRoute from "./contexts/ProtectedRoute";
-
+import StudentDashboard from "./pages/StudentDashboard";
 function App() {
   return (
     <Routes>
@@ -15,6 +15,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/Dashboard"
+        element={
+          <ProtectedRoute>
+            <StudentDashboard />
           </ProtectedRoute>
         }
       />

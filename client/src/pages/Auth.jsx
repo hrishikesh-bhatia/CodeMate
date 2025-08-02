@@ -15,7 +15,13 @@ function AuthPage() {
     try {
       const res = await axios.post(url, form);
       login(res.data.token, res.data.role);
-      navigate("/Home");
+      
+      if (res.data.role === "ta") {
+  navigate("/Home"); // Admin dashboard
+} else {
+  navigate("/dashboard"); // Student dashboard
+}
+
     } catch (err) {
       alert("Auth failed");
     }
