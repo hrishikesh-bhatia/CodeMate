@@ -1,6 +1,6 @@
 const axios = require("axios");
 require("dotenv").config({ path: "../.env" });
-
+const Session = require("../models/Session")
 const JUDGE0_URL =
   "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true";
 
@@ -35,6 +35,21 @@ const registerCodeExecutionSocket = (io, socket) => {
       io.to(roomId).emit("code-output", { output: finalOutput,time,memory });
 
       console.log("✅ Emitting 'code-output' to room:", roomId, "with output:", finalOutput)
+
+      await Session.findOneAndUpdate(
+  { roomId },
+  {
+    code,
+    stdin,
+    output: finalOutput,
+    languageId,
+    time,
+    memory,
+    updatedAt: new Date()
+  },
+  { new: true }
+);
+
     } catch (error) {
     //   console.error("Judge0 Error:", error.message);
       console.error("Judge0 Error:", error.response?.data || error.message);

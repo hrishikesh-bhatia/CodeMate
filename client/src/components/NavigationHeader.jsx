@@ -15,7 +15,7 @@ const NavigationHeader = () => {
               <Code2 className="w-6 h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">CodeSync</h1>
+              <h1 className="text-xl font-bold">CodeMate</h1>
               <p className="text-xs text-muted-foreground">Collaborative Editor</p>
             </div>
           </div>

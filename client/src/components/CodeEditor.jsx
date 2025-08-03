@@ -21,6 +21,9 @@ function CodeEditor({ socketRef, roomId }) {
     editorRef.current = editor;
     monacoRef.current = monaco;
 
+    // Set initial code
+    editor.setValue(code);
+
     // Emit cursor position
     editor.onDidChangeCursorPosition((e) => {
       const position = e.position;
@@ -53,33 +56,28 @@ function CodeEditor({ socketRef, roomId }) {
   useEffect(() => {
     if (!socketRef) return;
 
+    socketRef.emit("join-room", roomId);
+
     const handleCodeUpdate = (incomingCode) => {
+      console.log("🔥 Received latest code:", incomingCode);
       if (incomingCode !== editorRef.current?.getValue()) {
         editorRef.current?.setValue(incomingCode);
       }
     };
 
-    // const handleOutput = ({ output, time, memory }) => {
-    //   setOutput(output);
-    //   setTime(time);
-    //   setMemory(memory);
-    //   setLoading(false);
-    // };
-
     const handleOutput = ({ output, time, memory, error, status }) => {
-  console.log("📥 Received 'code-output':", { output, error, status });
+      console.log("📥 Received 'code-output':", { output, error, status });
 
-  if (status === "error" && error) {
-    setOutput(`❌ Error:\n${error}`);
-  } else {
-    setOutput(output);
-  }
+      if (status === "error" && error) {
+        setOutput(`❌ Error:\n${error}`);
+      } else {
+        setOutput(output);
+      }
 
-  setTime(time);
-  setMemory(memory);
-  setLoading(false);
-};
-
+      setTime(time);
+      setMemory(memory);
+      setLoading(false);
+    };
 
     const handleCursorChange = ({ position, userId }) => {
       if (userId === socketRef.id || !editorRef.current || !monacoRef.current) return;
@@ -168,7 +166,6 @@ function CodeEditor({ socketRef, roomId }) {
       <Editor
         height="90vh"
         language={getMonacoLanguage(languageId)}
-        value={code}
         onMount={handleEditorDidMount}
         onChange={handleChange}
         theme="vs-dark"
@@ -176,9 +173,6 @@ function CodeEditor({ socketRef, roomId }) {
 
       {/* 📤 Output */}
       <OutputBox output={output} time={time} memory={memory} />
-
-      
-
     </>
   );
 }

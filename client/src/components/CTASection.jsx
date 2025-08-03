@@ -29,7 +29,7 @@ const CTASection = () => {
             </h2>
 
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join CodeSync today and transform the way you learn and teach programming. 
+              Join CodeMate today and transform the way you learn and teach programming. 
               Start collaborating in minutes, not hours.
             </p>
 

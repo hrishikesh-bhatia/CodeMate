@@ -12,7 +12,7 @@ const Footer = () => {
                 <Code2 className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-xl font-bold">CodeSync</h3>
+                <h3 className="text-xl font-bold">CodeMate</h3>
                 <p className="text-sm text-muted-foreground">Collaborative Editor</p>
               </div>
             </div>
@@ -57,7 +57,7 @@ const Footer = () => {
 
         <div className="border-t border-border/50 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-sm">
-            © 2024 CodeSync. All rights reserved.
+            © 2024 CodeMate. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-muted-foreground">
             <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
