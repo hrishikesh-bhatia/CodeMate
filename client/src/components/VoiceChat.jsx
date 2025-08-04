@@ -14,10 +14,10 @@ function VoiceChat({ socket, roomId }) {
 
     // ✅ Create Peer first
     const peer = new Peer(undefined, {
-      host: "localhost",
-      port: 9000,
+      host: "https://codemate-backend-ju5r.onrender.com",
+      port: 443,
       path: "/voice",
-      secure: false,
+      secure: true,
     });
 
     setMyPeer(peer);

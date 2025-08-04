@@ -8,10 +8,10 @@ function AuthPage() {
   const [form, setForm] = useState({ username: "", password: "", role: "student" });
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  // const BASE_URL = import.meta.env.VITE_API_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = `http://localhost:5000/api/auth/${isLogin ? "login" : "signup"}`;
+    const url = `https://codemate-backend-ju5r.onrender.com/api/auth/${isLogin ? "login" : "signup"}`;
     try {
       const res = await axios.post(url, form);
       login(res.data.token, res.data.role);
