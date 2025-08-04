@@ -16,9 +16,9 @@ function StudentDashboard() {
       <aside className="w-64 bg-gray-900 shadow-md p-6 hidden md:block">
         <h2 className="text-2xl font-bold text-green-400 mb-8">Student Panel</h2>
         <nav className="space-y-4">
-          <button className="text-left w-full text-gray-300 hover:text-green-400">Join Room</button>
-          <button className="text-left w-full text-gray-300 hover:text-green-400">My Sessions</button>
-          <button className="text-left w-full text-gray-300 hover:text-green-400">Settings</button>
+          <button className="text-left w-full text-gray-300 hover:text-green-400 cursor-pointer">Join Room</button>
+          <button className="text-left w-full text-gray-300 hover:text-green-400 cursor-pointer">My Sessions</button>
+          <button className="text-left w-full text-gray-300 hover:text-green-400 cursor-pointer">Settings</button>
         </nav>
       </aside>
 
@@ -36,9 +36,9 @@ function StudentDashboard() {
           />
           <button
             onClick={handleJoinRoom}
-            className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition"
+            className="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition cursor-pointer"
           >
-            ✅ Join Room
+             Join Room
           </button>
         </div>
       </main>

@@ -54,7 +54,7 @@ function AuthPage() {
             <option value="ta">TA</option>
           </select>
         )}
-        <button type="submit" className="bg-blue-600 w-full py-2 rounded">
+        <button type="submit" className="bg-blue-600 w-full py-2 rounded cursor-pointer">
           {isLogin ? "Login" : "Signup"}
         </button>
         <p className="text-sm">

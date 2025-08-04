@@ -15,9 +15,9 @@ function Home() {
       <aside className="w-64 bg-gray-900 shadow-md p-6 hidden md:block">
         <h2 className="text-2xl font-bold text-blue-500 mb-8">CodeMate Admin</h2>
         <nav className="space-y-4">
-          <button className="text-left w-full text-gray-300 hover:text-blue-400">Dashboard</button>
-          <button className="text-left w-full text-gray-300 hover:text-blue-400">Rooms</button>
-          <button className="text-left w-full text-gray-300 hover:text-blue-400">Settings</button>
+          <button className="text-left w-full text-gray-300 hover:text-blue-400 cursor-pointer">Dashboard</button>
+          <button className="text-left w-full text-gray-300 hover:text-blue-400 cursor-pointer">Rooms</button>
+          <button className="text-left w-full text-gray-300 hover:text-blue-400 cursor-pointer">Settings</button>
         </nav>
       </aside>
 
@@ -28,7 +28,7 @@ function Home() {
           <p className="text-gray-400 mb-6">Create a new room to start collaborating instantly.</p>
           <button
             onClick={handleCreateRoom}
-            className="bg-gray-950 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            className="bg-gray-950 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition cursor-pointer"
           >
              Create Room
           </button>

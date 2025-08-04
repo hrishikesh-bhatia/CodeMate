@@ -1,7 +1,9 @@
 import { Button } from "./ui/button";
 import { ArrowRight, Code2, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CTASection = () => {
+  const navigate = useNavigate();
   return (
     <section className="py-24 bg-gradient-to-br from-primary/10 to-secondary/10 relative overflow-hidden">
       {/* Background Pattern */}
@@ -35,11 +37,11 @@ const CTASection = () => {
 
             {/* Main CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
-              <Button variant="hero" size="xl" className="group min-w-48">
+              <Button variant="hero" size="xl" className="group min-w-48 hover:border-1 cursor-pointer" onClick={() => navigate("/Auth")}>
                 Get Started Free
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="outline" size="xl" className="min-w-48">
+              <Button variant="outline" size="xl" className="min-w-48 hover:border-1 cursor-pointer" onClick={() => navigate("/Auth")}>
                 Sign In
               </Button>
             </div>

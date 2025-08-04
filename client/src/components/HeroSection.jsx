@@ -1,8 +1,10 @@
 import { Button } from "./ui/button";
 import { Code, Users, Video, Play } from "lucide-react";
 import heroImage from "./assets/hero-collaboration.jpg";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-screen bg-gradient-hero flex items-center justify-center overflow-hidden">
       {/* Background Glow Effects */}
@@ -52,11 +54,11 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button variant="hero" size="xl" className="group cursor-pointer">
+              <Button variant="hero" size="xl" className="group hover:border-1 cursor-pointer" onClick={() => navigate("/Auth")}>
                 Get Started
                 <Code className="w-5 h-5 group-hover:rotate-12 transition-transform" />
               </Button>
-              <Button variant="outline" size="xl" className="cursor-pointer">
+              <Button variant="outline" size="xl" className="hover:border-1 cursor-pointer" onClick={() => navigate("/Auth")}>
                 Sign In
               </Button>
             </div>

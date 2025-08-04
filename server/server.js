@@ -12,9 +12,7 @@ console.log("Loaded API Key:", process.env.JUDGE0_API_KEY);
 const mongoose = require("mongoose");
 
 mongoose
-  .connect("mongodb+srv://hrishikeshbhatia:6vwjcIix0URVWB4k@cluster0.cfnaxex.mongodb.net/codemate?retryWrites=true&w=majority&appName=Cluster0", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  .connect(process.env.MONGODB_URI, {
   })
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
