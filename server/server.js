@@ -31,8 +31,9 @@ app.use("/peerjs", peerServer); // This serves PeerJS at /peerjs/voice
 // Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
+    origin: "https://code-mate-pi.vercel.app",
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
