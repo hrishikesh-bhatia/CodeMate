@@ -2,6 +2,7 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const  registerCodeExecutionSocket  = require("./sockets/codeSocket.js") ;
 const User = require("./models/User.js");
+const { ExpressPeerServer } = require("peer");
 const Session = require('./models/Session.js')
 const app = require("./app.js");
 require("dotenv").config({ path: "../.env" }); // Add this at the top of your main file
@@ -19,6 +20,13 @@ mongoose
 
 // Create HTTP server
 const httpServer = createServer(app);
+
+const peerServer = ExpressPeerServer(httpServer, {
+  debug: true,
+  path: "/voice",
+});
+app.use("/peerjs", peerServer); // This serves PeerJS at /peerjs/voice
+
 
 // Initialize Socket.IO
 const io = new Server(httpServer, {
