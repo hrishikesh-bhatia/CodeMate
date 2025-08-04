@@ -9,7 +9,12 @@ const authRoutes = require("./routes/authRoutes.js");
 dotenv.config({ path: "../.env" });
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://code-mate-pi.vercel.app"], // ✅ Your Vercel frontend
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/code", codeRoutes);
