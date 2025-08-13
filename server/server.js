@@ -5,7 +5,7 @@ const User = require("./models/User.js");
 const { ExpressPeerServer } = require("peer");
 const Session = require('./models/Session.js')
 const app = require("./app.js");
-require("dotenv").config({ path: "../.env" }); // Add this at the top of your main file
+require("dotenv").config({ path: "../.env" });
 const PORT = process.env.PORT || 5000;
 console.log("Loaded API Key:", process.env.JUDGE0_API_KEY);
 
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
   socket.on("join-voice", (peerId, roomId) => {
   socket.peerId = peerId;
   socket.roomId = roomId;
-  socket.join(roomId); // ✅ Join the voice room
+  socket.join(roomId); // Join the voice room
   console.log(`🎙 Peer ${peerId} joined voice room ${roomId}`);
   socket.to(roomId).emit("user-joined-voice", peerId);
 });
