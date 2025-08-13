@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const User = require("../models/User"); // Make sure this path is correct
+const User = require("../models/User"); 
 require("dotenv").config({ path: "../.env" });
 
 const JWT_SECRET = process.env.JWT_SECRET;
